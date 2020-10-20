@@ -36,8 +36,6 @@ while run:
             if event.key == pygame.K_UP:
                 player.jump()
 
-    keys = pygame.key.get_pressed()
-
     if blocktimer == 0:
         blocks.append(UpperBlock(winsize))
         blocks.append(LowerBlock(winsize, blocks[-1]))
