@@ -30,12 +30,12 @@ class Player:
             self.y_vel = 0
 
     def gravity(self):
-        self.y_vel = self.y_vel + 0.75
-        if self.y_vel > 10:
-            self.y_vel = 10
+        self.y_vel = self.y_vel + 0.5
+        if self.y_vel > 7:
+            self.y_vel = 7
 
     def jump(self):
-        self.y_vel -= 20
-        if self.y_vel < -15:
-            self.y_vel = -15
+        self.y_vel -= 15
+        if self.y_vel < -8:
+            self.y_vel = -8
 
