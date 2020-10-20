@@ -13,7 +13,7 @@ class Player:
 
     def draw(self, win):
 
-        pygame.draw.rect(win, (255, 255, 0), (self.x - self.halfsize, self.y - self.halfsize, self.size, self.size))
+        pygame.draw.rect(win, (255, 145, 0), (self.x - self.halfsize, self.y - self.halfsize, self.size, self.size))
 
     def move(self):
         self.x = self.x + self.x_vel
