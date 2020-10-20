@@ -38,4 +38,3 @@ class Player:
         self.y_vel -= 15
         if self.y_vel < -8:
             self.y_vel = -8
-

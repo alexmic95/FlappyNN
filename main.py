@@ -1,6 +1,11 @@
 import pygame
 from player import Player
 from blocks import UpperBlock, LowerBlock
+# import os
+
+# headless mode
+# os.putenv('SDL_VIDEODRIVER', 'fbcon')
+# os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 pygame.init()
 
