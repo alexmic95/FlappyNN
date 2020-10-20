@@ -13,6 +13,8 @@ winsize = 500
 
 win = pygame.display.set_mode((winsize, winsize))
 
+bg = pygame.image.load("bg500.png")
+
 pygame.display.set_caption("FlappyNN")
 
 player = Player(winsize)
@@ -51,7 +53,7 @@ while run:
     player.gravity()
     player.move()
 
-    win.fill((0, 0, 0))
+    win.blit(bg, (0, 0))
 
     for block in blocks:
         block.move()
