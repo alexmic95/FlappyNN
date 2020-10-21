@@ -21,6 +21,8 @@ player = Player(winsize)
 blocktimer = 0
 blocks = []
 
+hitlist = []
+
 clock = pygame.time.Clock()
 
 
@@ -60,3 +62,13 @@ while run:
     player.draw(win)
 
     pygame.display.update()
+
+    hitlist.clear()
+    for block in blocks:
+        hitlist.append(block.hitplayer(player))
+    if any(hitlist):
+        clock.tick(1)
+        player = Player(winsize)
+        blocks.clear()
+        blocktimer = 0
+

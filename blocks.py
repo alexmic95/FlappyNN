@@ -15,6 +15,16 @@ class UpperBlock:
     def move(self):
         self.x = self.x - 3
 
+    def hitplayer(self, player):
+        if player.x + player.halfsize < self.x:
+            return False
+        elif player.x - player.halfsize > self.x + 50:
+            return False
+        elif player.y - player.halfsize > self.y:
+            return False
+        else:
+            return True
+
 
 class LowerBlock:
     def __init__(self, winsize, ublock):
@@ -27,3 +37,13 @@ class LowerBlock:
 
     def move(self):
         self.x = self.x - 3
+
+    def hitplayer(self, player):
+        if player.x + player.halfsize < self.x:
+            return False
+        elif player.x - player.halfsize > self.x + 50:
+            return False
+        elif player.y + player.halfsize < self.y:
+            return False
+        else:
+            return True
