@@ -7,68 +7,65 @@ from blocks import UpperBlock, LowerBlock
 # os.putenv('SDL_VIDEODRIVER', 'fbcon')
 # os.environ["SDL_VIDEODRIVER"] = "dummy"
 
-pygame.init()
 
-winsize = 500
+class FlappyNNGame:
+    def __init__(self):
+        self.winsize = 500
+        pygame.init()
+        self.win = pygame.display.set_mode((self.winsize, self.winsize))
+        self.bg = pygame.image.load("bg500.png")
+        pygame.display.set_caption("FlappyNN")
+        self.player = Player(self.winsize)
+        self.blocktimer = 0
+        self.blocks = []
+        self.hitlist = []
+        self.clock = pygame.time.Clock()
+        self.running = True
 
-win = pygame.display.set_mode((winsize, winsize))
+    def run(self):
+        while self.running:
+            self.clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.player.jump()
+            if self.blocktimer == 0:
+                self.blocks.append(UpperBlock(self.winsize))
+                self.blocks.append(LowerBlock(self.winsize, self.blocks[-1]))
+                self.blocktimer = self.blocktimer + 1
+            elif self.blocktimer == 80:
+                self.blocktimer = 0
+            else:
+                self.blocktimer = self.blocktimer + 1
+            for block in self.blocks:
+                if block.x < -50:
+                    self.blocks.remove(block)
 
-bg = pygame.image.load("bg500.png")
+            self.player.gravity()
+            self.player.move()
 
-pygame.display.set_caption("FlappyNN")
+            self.win.blit(self.bg, (0, 0))
 
-player = Player(winsize)
-blocktimer = 0
-blocks = []
+            for block in self.blocks:
+                block.move()
+                block.draw(self.win)
 
-hitlist = []
+            self.player.draw(self.win)
 
-clock = pygame.time.Clock()
+            pygame.display.update()
+
+            self.hitlist.clear()
+            for block in self.blocks:
+                self.hitlist.append(block.hitplayer(self.player))
+            if any(self.hitlist):
+                self.clock.tick(1)
+                self.player = Player(self.winsize)
+                self.blocks.clear()
+                self.blocktimer = 0
 
 
-# mainloop
-run = True
-while run:
-    clock.tick(60)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                player.jump()
-
-    if blocktimer == 0:
-        blocks.append(UpperBlock(winsize))
-        blocks.append(LowerBlock(winsize, blocks[-1]))
-        blocktimer = blocktimer + 1
-    elif blocktimer == 80:
-        blocktimer = 0
-    else:
-        blocktimer = blocktimer + 1
-    for block in blocks:
-        if block.x < -50:
-            blocks.remove(block)
-
-    player.gravity()
-    player.move()
-
-    win.blit(bg, (0, 0))
-
-    for block in blocks:
-        block.move()
-        block.draw(win)
-
-    player.draw(win)
-
-    pygame.display.update()
-
-    hitlist.clear()
-    for block in blocks:
-        hitlist.append(block.hitplayer(player))
-    if any(hitlist):
-        clock.tick(1)
-        player = Player(winsize)
-        blocks.clear()
-        blocktimer = 0
-
+if __name__ == "__main__":
+    game = FlappyNNGame()
+    game.run()
