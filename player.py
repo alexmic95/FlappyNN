@@ -10,6 +10,7 @@ class Player:
         self.y_vel = 0
         self.size = 30
         self.halfsize = int(self.size / 2)
+        self.score_dist = 0
 
     def draw(self, win):
 
@@ -38,3 +39,6 @@ class Player:
         self.y_vel -= 15
         if self.y_vel < -8:
             self.y_vel = -8
+
+    def score_dist_add(self):
+        self.score_dist = self.score_dist + 1

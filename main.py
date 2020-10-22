@@ -61,9 +61,11 @@ class FlappyNNGame:
                 self.hitlist.append(block.hitplayer(self.player))
             if any(self.hitlist):
                 self.clock.tick(1)
+                print(self.player.score_dist)
                 self.player = Player(self.winsize)
                 self.blocks.clear()
                 self.blocktimer = 0
+            self.player.score_dist_add()
 
 
 if __name__ == "__main__":
