@@ -2,6 +2,7 @@ import pygame
 from player import Player
 from blocks import UpperBlock, LowerBlock
 # import os
+import neat
 
 # headless mode
 # os.putenv('SDL_VIDEODRIVER', 'fbcon')
@@ -42,6 +43,7 @@ class FlappyNNGame:
             for block in self.blocks:
                 if block.x < -50:
                     self.blocks.remove(block)
+            print(self.player.getdists(self.blocks))
 
             self.player.gravity()
             self.player.move()
@@ -68,6 +70,82 @@ class FlappyNNGame:
             self.player.score_dist_add()
 
 
+    def __rungamenn(self, genomes, config):
+        runninglist = []
+        players = []
+        nets = []
+        ge = []
+        self.blocks = []
+        self.blocktimer = 0
+        for _, g in genomes:
+            players.append(Player(self.winsize))
+            nets.append(neat.nn.FeedForwardNetwork.create(g, config))
+            g.fitness = 0
+            ge.append(g)
+            runninglist.append(True)
+
+        while any(runninglist):
+            self.clock.tick(60)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            if self.blocktimer == 0:
+                self.blocks.append(UpperBlock(self.winsize))
+                self.blocks.append(LowerBlock(self.winsize, self.blocks[-1]))
+                self.blocktimer = self.blocktimer + 1
+            elif self.blocktimer == 80:
+                self.blocktimer = 0
+            else:
+                self.blocktimer = self.blocktimer + 1
+            for block in self.blocks:
+                if block.x < -50:
+                    self.blocks.remove(block)
+            for x, player in enumerate(players):
+                if runninglist[x]:
+                    output = nets[x].activate(player.getdists(self.blocks))
+                    if output[0] > 0.5:
+                        player.jump()
+                    player.gravity()
+                    player.move()
+            self.win.blit(self.bg, (0, 0))
+
+            for block in self.blocks:
+                block.move()
+                block.draw(self.win)
+
+            for x, player in enumerate(players):
+                if runninglist[x]:
+                    player.draw(self.win)
+            pygame.display.update()
+
+            for x, player in enumerate(players):
+                if runninglist[x]:
+                    self.hitlist.clear()
+                    for block in self.blocks:
+                        self.hitlist.append(block.hitplayer(player))
+                    if any(self.hitlist):
+                        runninglist[x] = False
+                    else:
+                        player.score_dist_add()
+                        ge[x].fitness = player.score_dist
+
+
+
+
+
+
+    def runga(self):
+        config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, "neatconfig.txt")
+        p = neat.Population(config)
+        p.add_reporter(neat.StdOutReporter(True))
+        stats = neat.StatisticsReporter()
+        p.add_reporter(stats)
+
+        winner = p.run(self.__rungamenn, 50)
+
+
+
 if __name__ == "__main__":
     game = FlappyNNGame()
-    game.run()
+    game.runga()

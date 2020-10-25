@@ -1,4 +1,5 @@
 import pygame
+from blocks import UpperBlock, LowerBlock
 
 
 class Player:
@@ -13,7 +14,6 @@ class Player:
         self.score_dist = 0
 
     def draw(self, win):
-
         pygame.draw.rect(win, (255, 145, 0), (self.x - self.halfsize, self.y - self.halfsize, self.size, self.size))
 
     def move(self):
@@ -42,3 +42,20 @@ class Player:
 
     def score_dist_add(self):
         self.score_dist = self.score_dist + 1
+
+    def getdists(self, blocks):
+        y_vel = self.y_vel
+        y = self.y
+        nextblockdist = 1000
+        for block in blocks:
+            if type(block) is UpperBlock:
+                if (block.x + 50) - (self.x - self.halfsize) <= nextblockdist:
+                    if (block.x + 50) - (self.x - self.halfsize) > 0:
+                        nextblockdist = (block.x + 50) - (self.x - self.halfsize)
+                        nextublock = block
+            elif type(block) is LowerBlock:
+                if (block.x + 50) - (self.x - self.halfsize) <= nextblockdist:
+                    if (block.x + 50) - (self.x - self.halfsize) > 0:
+                        nextblockdist = (block.x + 50) - (self.x - self.halfsize)
+                        nextlblock = block
+        return y, y_vel, nextblockdist, nextublock.y, nextlblock.y
