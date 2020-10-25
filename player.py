@@ -12,9 +12,15 @@ class Player:
         self.size = 30
         self.halfsize = int(self.size / 2)
         self.score_dist = 0
+        self.rect = pygame.Rect((self.x - self.halfsize, self.y - self.halfsize), (self.size, self.size))
+        self.img = pygame.image.load("bird.png")
+        self.img = pygame.transform.scale(self.img, (30, 30))
 
     def draw(self, win):
-        pygame.draw.rect(win, (255, 145, 0), (self.x - self.halfsize, self.y - self.halfsize, self.size, self.size))
+        self.rect.x = self.x - self.halfsize
+        self.rect.y = self.y - self.halfsize
+        #pygame.draw.rect(win, (255, 145, 0), (self.x - self.halfsize, self.y - self.halfsize, self.size, self.size))
+        win.blit(self.img, self.rect)
 
     def move(self):
         self.x = self.x + self.x_vel

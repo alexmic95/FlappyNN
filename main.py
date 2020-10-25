@@ -43,7 +43,7 @@ class FlappyNNGame:
             for block in self.blocks:
                 if block.x < -50:
                     self.blocks.remove(block)
-            print(self.player.getdists(self.blocks))
+            # print(self.player.getdists(self.blocks))
 
             self.player.gravity()
             self.player.move()
