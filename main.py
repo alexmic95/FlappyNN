@@ -13,6 +13,7 @@ class FlappyNNGame:
     def __init__(self):
         self.winsize = 500
         pygame.init()
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 15)
         self.win = pygame.display.set_mode((self.winsize, self.winsize))
         self.bg = pygame.image.load("bg500.png")
         pygame.display.set_caption("FlappyNN")
@@ -22,6 +23,7 @@ class FlappyNNGame:
         self.hitlist = []
         self.clock = pygame.time.Clock()
         self.running = True
+        self.highscore = 0
 
     def run(self):
         while self.running:
@@ -56,6 +58,11 @@ class FlappyNNGame:
 
             self.player.draw(self.win)
 
+            text_score = self.myfont.render("current score: " + str(self.player.score), True, (0, 0, 0))
+            text_highscore = self.myfont.render("highscore: " + str(self.highscore), True, (0, 0, 0))
+            self.win.blit(text_score, (10, 10))
+            self.win.blit(text_highscore, (10, 25))
+
             pygame.display.update()
 
             self.hitlist.clear()
@@ -63,18 +70,20 @@ class FlappyNNGame:
                 self.hitlist.append(block.hitplayer(self.player))
             if any(self.hitlist):
                 self.clock.tick(1)
-                print(self.player.score_dist)
+                print("You achieved " + str(self.player.score) + " points!")
+                if self.player.score > self.highscore:
+                    self.highscore = self.player.score
                 self.player = Player(self.winsize)
                 self.blocks.clear()
                 self.blocktimer = 0
-            self.player.score_dist_add()
-
+            self.player.score_point(self.blocks)
 
     def __rungamenn(self, genomes, config):
         runninglist = []
         players = []
         nets = []
         ge = []
+        maxfitness = 0
         self.blocks = []
         self.blocktimer = 0
         for _, g in genomes:
@@ -117,6 +126,10 @@ class FlappyNNGame:
             for x, player in enumerate(players):
                 if runninglist[x]:
                     player.draw(self.win)
+            text_current_fitness = self.myfont.render("current fitness: " + str(maxfitness) , True, (0, 0, 0))
+            text_indv_alive = self.myfont.render("individuals alive: " + str(runninglist.count(True)), True, (0, 0, 0))
+            self.win.blit(text_current_fitness, (10, 10))
+            self.win.blit(text_indv_alive, (10, 25))
             pygame.display.update()
 
             for x, player in enumerate(players):
@@ -129,11 +142,10 @@ class FlappyNNGame:
                     else:
                         player.score_dist_add()
                         ge[x].fitness = player.score_dist
-
-
-
-
-
+                        if ge[x].fitness > maxfitness:
+                            maxfitness = ge[x].fitness
+                        if ge[x].fitness > 10000:
+                            runninglist[x] = False
 
     def runga(self):
         config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, "neatconfig.txt")
@@ -145,7 +157,6 @@ class FlappyNNGame:
         winner = p.run(self.__rungamenn, 50)
 
 
-
 if __name__ == "__main__":
     game = FlappyNNGame()
-    game.runga()
+    game.run()

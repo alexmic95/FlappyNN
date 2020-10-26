@@ -15,6 +15,7 @@ class Player:
         self.rect = pygame.Rect((self.x - self.halfsize, self.y - self.halfsize), (self.size, self.size))
         self.img = pygame.image.load("bird.png")
         self.img = pygame.transform.scale(self.img, (30, 30))
+        self.score = 0
 
     def draw(self, win):
         self.rect.x = self.x - self.halfsize
@@ -65,3 +66,12 @@ class Player:
                         nextblockdist = (block.x + 50) - (self.x - self.halfsize)
                         nextlblock = block
         return y, y_vel, nextblockdist, nextublock.y, nextlblock.y
+
+    def score_point(self, blocks):
+        for block in blocks:
+            if type(block) is UpperBlock:
+                if not block.scored:
+                    if block.x + 50 < self.x - self.halfsize:
+                        self.score += 1
+                        block.scored = True
+

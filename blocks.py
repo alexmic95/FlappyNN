@@ -8,6 +8,7 @@ class UpperBlock:
         maxy = winsize - 200
         miny = 50
         self.y = random.randint(miny, maxy)
+        self.scored = False
 
     def draw(self, win):
         pygame.draw.rect(win, (255, 255, 255), (self.x, 0, 50, self.y))
