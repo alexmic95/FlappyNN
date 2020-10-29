@@ -158,5 +158,16 @@ class FlappyNNGame:
 
 
 if __name__ == "__main__":
-    game = FlappyNNGame()
-    game.run()
+    inputstr = "Falls du selber spielen möchtest, tippe 1.\n" \
+               "Falls du ein neuronales Netz trainieren möchtest, welches das Spiel spielt, tippe 2.\n" \
+               "Falls du abbrechen möchtest, mache eine andere beliebige Eingabe.\n"
+    i = input(inputstr)
+    if i == "1":
+        game = FlappyNNGame()
+        game.run()
+    elif i == "2":
+        game = FlappyNNGame()
+        game.runga()
+
+        
+
