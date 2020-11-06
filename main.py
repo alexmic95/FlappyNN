@@ -148,7 +148,8 @@ class FlappyNNGame:
                             runninglist[x] = False
 
     def runga(self):
-        config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation, "neatconfig.txt")
+        config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
+                                    neat.DefaultStagnation, "neatconfig.txt")
         p = neat.Population(config)
         p.add_reporter(neat.StdOutReporter(True))
         stats = neat.StatisticsReporter()
